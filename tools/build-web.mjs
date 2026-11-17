@@ -32,10 +32,13 @@ await writeFile('www/manifest.webmanifest',JSON.stringify({
  start_url:'./',scope:'./',background_color:'#5930a0',theme_color:'#5930a0',
  icons:[{src:'./assets/icon-192.png',sizes:'192x192',type:'image/png'},{src:'./assets/icon-512.png',sizes:'512x512',type:'image/png'}]
 },null,2));
-await writeFile('www/sw.js',String.raw\`const CACHE='sudoklue-\${(JSON.parse((await readFile('versao.json','utf8'))).version)}';
-self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['./','./index.html','./assets/menu.png','./assets/icon-192.png','./assets/icon-512.png','./native-updates.js','./manifest.webmanifest']))));
-self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('sudoklue-')&&k!==CACHE).map(k=>caches.delete(k))))));
-self.addEventListener('fetch',e=>{if(e.request.method!=='GET'||new URL(e.request.url).pathname.includes('/updates/'))return;e.respondWith(fetch(e.request).catch(()=>caches.match(e.request)));});\`);
+const cacheName='sudoklue-'+JSON.parse(await readFile('versao.json','utf8')).version;
+await writeFile('www/sw.js',[
+  'const CACHE='+JSON.stringify(cacheName)+';',
+  "self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['./','./index.html','./assets/menu.png','./assets/icon-192.png','./assets/icon-512.png','./native-updates.js','./manifest.webmanifest']))));",
+  "self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('sudoklue-')&&k!==CACHE).map(k=>caches.delete(k))))));",
+  "self.addEventListener('fetch',e=>{if(e.request.method!=='GET'||new URL(e.request.url).pathname.includes('/updates/'))return;e.respondWith(fetch(e.request).catch(()=>caches.match(e.request)));});"
+].join('\n'));
 await build({ entryPoints:['src/native-updates.js'],outfile:'www/native-updates.js',bundle:true,minify:true,format:'iife',platform:'browser',target:'es2020' });
 await rm('dist-pages',{recursive:true,force:true});
 await cp('www','dist-pages',{recursive:true});
