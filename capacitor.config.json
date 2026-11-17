@@ -1,0 +1,11 @@
+{
+  "appId": "br.com.sudoklue.game",
+  "appName": "Sudoklue",
+  "webDir": "www",
+  "plugins": {
+    "LiveUpdate": {
+      "readyTimeout": 10000,
+      "autoUpdateStrategy": "none"
+    }
+  }
+}
