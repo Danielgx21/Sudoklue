@@ -1,0 +1,21 @@
+{
+  "name": "sudoklue",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Sudoklue - enigmas de investigação com monstrinhos",
+  "scripts": {
+    "build:web": "node tools/build-web.mjs",
+    "android:prepare": "npm run build:web && npx cap add android && npx cap sync android",
+    "android:sync": "npm run build:web && npx cap sync android"
+  },
+  "dependencies": {
+    "@capacitor/core": "^8.0.0",
+    "@capacitor/android": "^8.0.0",
+    "@capawesome/capacitor-live-update": "^8.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.0.0",
+    "esbuild": "^0.25.0",
+    "sharp": "^0.34.0"
+  }
+}
