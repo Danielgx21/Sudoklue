@@ -1,10 +1,10 @@
 {
-  "version": "1.0.0",
+  "version": "1.0.1",
   "nativeFormat": 1,
   "released": "2026-11-17",
   "notes": [
-    "Primeira versão do Sudoklue",
-    "Quatro casos",
-    "Funciona offline"
+    "Menu inicial compacto e proporcional em celulares",
+    "Áreas de toque alinhadas com a ilustração",
+    "Mantidos os quatro casos e o funcionamento offline"
   ]
 }

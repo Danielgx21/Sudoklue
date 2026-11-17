@@ -2,7 +2,7 @@ import { Capacitor, CapacitorHttp } from '@capacitor/core';
 import { LiveUpdate } from '@capawesome/capacitor-live-update';
 
 const MANIFEST_URL = 'https://danielgx21.github.io/Sudoklue/updates/latest.json';
-const BUNDLED_VERSION = '1.0.0';
+const BUNDLED_VERSION = '1.0.1';
 const NATIVE_FORMAT = 1;
 
 async function checkForUpdates() {

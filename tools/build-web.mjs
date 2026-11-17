@@ -11,6 +11,7 @@ if (art) {
   const png = Buffer.from(art[2], 'base64');
   await writeFile('www/assets/menu.png',png);
   output = output.replace(art[0], art[1] + './assets/menu.png');
+  output = output.replace('<img class="menu-backdrop"', '<img class="menu-backdrop" src="./assets/menu.png"');
   // Ícone recortado da arte ilustrada real, não redesenhado com formas simples.
   const meta = await sharp(png).metadata();
   const w = meta.width || 620, h = meta.height || 1270;
@@ -24,8 +25,10 @@ if (art) {
 } else {
   throw new Error('A ilustração original do menu não foi encontrada no HTML.');
 }
+output=output.replace('</head>', '<link rel="stylesheet" href="./menu-responsive.css"></head>');
 output=output.replace('</body>','<script defer src="./native-updates.js"></script><script>if(!window.Capacitor?.isNativePlatform?.() && "serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));}</script></body>');
 await writeFile('www/index.html',output);
+await cp('menu-responsive.css','www/menu-responsive.css');
 await writeFile('www/versao.json',await readFile('versao.json','utf8'));
 await writeFile('www/manifest.webmanifest',JSON.stringify({
  name:'Sudoklue',short_name:'Sudoklue',lang:'pt-BR',display:'standalone',
@@ -35,7 +38,7 @@ await writeFile('www/manifest.webmanifest',JSON.stringify({
 const cacheName='sudoklue-'+JSON.parse(await readFile('versao.json','utf8')).version;
 await writeFile('www/sw.js',[
   'const CACHE='+JSON.stringify(cacheName)+';',
-  "self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['./','./index.html','./assets/menu.png','./assets/icon-192.png','./assets/icon-512.png','./native-updates.js','./manifest.webmanifest']))));",
+  "self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['./','./index.html','./assets/menu.png','./assets/icon-192.png','./assets/icon-512.png','./menu-responsive.css','./native-updates.js','./manifest.webmanifest']))));",
   "self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('sudoklue-')&&k!==CACHE).map(k=>caches.delete(k))))));",
   "self.addEventListener('fetch',e=>{if(e.request.method!=='GET'||new URL(e.request.url).pathname.includes('/updates/'))return;e.respondWith(fetch(e.request).catch(()=>caches.match(e.request)));});"
 ].join('\n'));
