@@ -30,6 +30,10 @@ jobs:
         run: npm run build:web
       - name: Gerar pacote de atualização
         run: python3 tools/create_update.py
+      - name: Incluir Duelo de Relíquias no site
+        run: |
+          mkdir -p dist-pages/duelo-de-reliquias
+          cp duelo-de-reliquias/index.html dist-pages/duelo-de-reliquias/index.html
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
